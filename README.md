@@ -1,3 +1,57 @@
+```mermaid
+flowchart TD
+
+%% ============================
+%% 1. Browser Environment
+%% ============================
+A[Browser Environment] --> A1[Collect Non‑Sensitive Signals<br/>(UA, Platform, Entropy, Extensions Hash)]
+A --> A2[Session State<br/>(Continuity, Activity, Stability)]
+A --> A3[Integrity Checks<br/>(No Headless, No Automation, No Tampering)]
+
+%% ============================
+%% 2. Mask SDK
+%% ============================
+A1 --> B[ZK‑Web‑Browser‑mask SDK]
+A2 --> B
+A3 --> B
+
+B --> B1[Normalize Signals]
+B --> B2[Generate Commitments]
+B --> B3[Construct Witness]
+
+%% ============================
+%% 3. Local ZK Prover
+%% ============================
+B3 --> C[Local ZK Prover]
+C --> C1[Proof π]
+C --> C2[Commitment C]
+
+%% ============================
+%% 4. Off‑Chain Verifier Daemon
+%% ============================
+C1 --> D[Off‑Chain Verifier Daemon]
+C2 --> D
+
+D --> D1[Verify π Against Circuit]
+D --> D2[Check Mask Rules<br/>(Expiry, Revocation, Version)]
+D --> D3[Emit Verification Result]
+
+%% ============================
+%% 5. Mask Orchestrator
+%% ============================
+D3 --> E[ZK‑Mask‑Orchestrator‑app]
+
+E --> E1[Update Identity Mask State]
+E --> E2[Write to Registry<br/>(Optional On‑Chain)]
+E --> E3[Return Attestation Token]
+
+%% ============================
+%% 6. Application Layer
+%% ============================
+E3 --> F[Application / dApp / Service]
+F --> F1[Accept Browser‑Integrity Attestation]
+F --> F2[Gate Access / Boost Trust / Score User]
+```
 
 
 ```mermaid
@@ -16,6 +70,171 @@ https://buy.polar.sh/polar_cl_RF40qWYgiCob4z80EjoLU39XP2mxzRvTA6jAe0XIJo8Ko-fi.c
 gitdigitalzeroknowledge
 
 [![Open Collective](https://img.shields.io/opencollective/all/solana-project-funds?label=Backers%20%26%20Sponsors)](https://opencollective.com/solana-project-funds)
+
+ZK‑Web‑Browser‑mask
+A Zero‑Knowledge Browser‑Activity Mask for the GitDigital‑ZK Identity Ecosystem
+
+The ZK‑Web‑Browser‑mask is a modular identity‑layer mask that transforms browser‑level activity into privacy‑preserving, zero‑knowledge attestations. It allows users to prove browser trust, session integrity, device consistency, and behavioral legitimacy — without revealing any raw browsing data.
+
+This mask is one of the core components in the GitDigital‑ZK Mask Authority, alongside:
+
+- ZK‑Identity‑mask  
+- ZK‑Phone‑Activate‑mask  
+- ZK‑Device‑Trust‑mask  
+- ZK‑Mask‑Orchestrator‑app
+
+Together, these masks form a governance‑aligned, audit‑ready, multi‑surface identity system for digital ecosystems, public‑good infrastructure, and community‑driven applications.
+
+---
+
+✨ What This Mask Does
+The ZK‑Web‑Browser‑mask enables:
+
+1. Browser‑Integrity Proofs
+Generate zero‑knowledge proofs that confirm:
+
+- Browser is genuine (Chrome, Firefox, Safari, etc.)  
+- No automation flags  
+- No tampering or injected scripts  
+- No suspicious extensions  
+- No headless or bot‑like behavior  
+
+All without exposing the actual browser fingerprint.
+
+2. Session‑Continuity Attestations
+Prove that:
+
+- A session is stable  
+- A user is the same across page loads  
+- No session hijacking occurred  
+- No cross‑device spoofing  
+
+3. Privacy‑Preserving Activity Signals
+The mask can commit to:
+
+- “User has an active browser session”  
+- “User has interacted with the page”  
+- “User is not idle or automated”  
+
+…while revealing zero raw activity data.
+
+4. Off‑Chain → On‑Chain Verification
+The mask supports:
+
+- Local browser proof generation  
+- Off‑chain async verification daemon  
+- On‑chain registry updates (via the Mask Orchestrator)  
+
+---
+
+🧱 Architecture Overview
+
+`
+Browser → Mask SDK → ZK Prover → Commitment + Proof
+                     ↓
+              Off‑Chain Verifier
+                     ↓
+         ZK‑Mask‑Orchestrator‑app
+                     ↓
+         Identity Registry / Badge Authority
+`
+
+Core Components in This Repo
+- /sdk/ — TypeScript browser SDK  
+- /daemon/ — async off‑chain verification service  
+- /docs/ — examples, flows, and integration patterns  
+- /tests/ — integration + e2e tests  
+- .github/workflows/ — CI, linting, type‑checking, and build pipelines  
+
+---
+
+🚀 Getting Started
+
+Prerequisites
+- Node.js 18+  
+- pnpm or npm  
+- Rust (for verifier daemon)  
+- Solana CLI (optional, for registry interactions)  
+
+Install
+`bash
+git clone https://github.com/GitDigital-ZK/ZK-Web-Browser-mask
+cd ZK-Web-Browser-mask
+pnpm install
+`
+
+Run the Browser SDK Example
+`bash
+cd examples/browser
+pnpm dev
+`
+
+Run the Off‑Chain Verifier
+`bash
+cd daemon
+cargo run
+`
+
+---
+
+🧪 Testing
+Run all tests:
+
+`bash
+pnpm test
+`
+
+Run e2e tests:
+
+`bash
+pnpm test:e2e
+`
+
+---
+
+📚 Documentation
+Documentation lives in:
+
+- /docs/ — integration guides  
+- /sdk/ — TypeScript SDK reference  
+- /daemon/ — verifier architecture  
+
+More examples will be added as the mask authority expands.
+
+---
+
+🔐 Governance & Security
+This mask follows the GitDigital‑ZK governance model:
+
+- Deterministic versioning  
+- Strict auditability  
+- Mask lifecycle rules  
+- Revocation + expiration  
+- Orchestrator‑enforced validation  
+
+Security policies live under:
+
+`
+/GOVERNANCE
+`
+
+---
+
+🤝 Contributing
+We welcome contributions from builders, researchers, and zk‑engineers.
+
+1. Fork the repo  
+2. Create a feature branch  
+3. Submit a PR with clear commits  
+4. Ensure CI passes  
+
+---
+
+📄 License
+MIT License — see LICENSE for details.
+
+---
+
 [!=== FILE: README.md ===
 
 zk-Identity-masks
